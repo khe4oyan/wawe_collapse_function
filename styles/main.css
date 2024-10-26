@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000d;
+}
+
+.world {
+  display: grid;
+  grid-template-columns: repeat(45, 1fr);
+  padding: 10px;
+}
+
+.node {
+  width: 20px;
+  height: 20px;
+  background-color: rgb(20, 20, 20);
+
+  img {
+    width: 100%;
+  }
+}
