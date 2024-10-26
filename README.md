@@ -1,1 +1,1 @@
-# wave_collapse_function
+Demo: https://khe4oyan.github.io/wave_collapse_function/
