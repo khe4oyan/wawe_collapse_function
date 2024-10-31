@@ -1,15 +1,15 @@
 class Node {
+  static variants = [
+    {img: "forest.png", variants: [0, 1]},
+    {img: "tree.png", variants: [0, 1, 2]},
+    {img: "grass.png", variants: [1, 2, 3]},
+    {img: "sand.png", variants: [2, 3, 4]},
+    {img: "water.png", variants: [3, 4, 5]},
+    {img: "deep_water.png", variants: [4, 5]},
+  ];
+
   selectedVariantInd;
   isTouched;
-
-  static variants = [
-    ["forest.png", [0, 1]],
-    ["tree.png", [0, 1, 2]],
-    ["grass.png", [1, 2, 3]],
-    ["sand.png", [2, 3, 4]],
-    ["water.png", [3, 4, 5]],
-    ["deep_water.png", [4, 5]],
-  ];
 
   constructor() {
     this.selectedVariantInd = -1;
@@ -43,8 +43,7 @@ class Node {
       return;
     }
 
-    this.selectedVariantInd =
-      availableVariants[Math.floor(Math.random() * availableVariants.length)];
+    this.selectedVariantInd = availableVariants[Math.floor(Math.random() * availableVariants.length)];
   }
 
   intersectSideVariants(world, i, j, possibleVariants) {
@@ -54,7 +53,7 @@ class Node {
 
     const variantInd = world[i][j].selectedVariantInd;
     if (variantInd > -1) {
-      const allowedVariants = new Set(Node.variants[variantInd][1]);
+      const allowedVariants = new Set(Node.variants[variantInd].variants);
       possibleVariants.forEach((variant) => {
         if (!allowedVariants.has(variant)) {
           possibleVariants.delete(variant);
@@ -67,7 +66,7 @@ class Node {
     const img = document.createElement("img");
 
     if (this.selectedVariantInd > -1) {
-      img.src = `./img/${Node.variants[this.selectedVariantInd][0]}`;
+      img.src = `./img/${Node.variants[this.selectedVariantInd].img}`;
     }
 
     return img;

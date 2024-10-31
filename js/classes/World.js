@@ -7,7 +7,7 @@ class World {
     this.world = [];
 
     const heigth = 30;
-    const width = 45;
+    const width = 65;
 
     // create world
     for (let i = 0; i < heigth; ++i) {

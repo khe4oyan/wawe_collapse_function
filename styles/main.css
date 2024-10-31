@@ -14,7 +14,7 @@ body {
 
 .world {
   display: grid;
-  grid-template-columns: repeat(45, 1fr);
+  grid-template-columns: repeat(65, 1fr);
   padding: 10px;
 }
 
