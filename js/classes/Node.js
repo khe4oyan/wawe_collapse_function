@@ -67,6 +67,8 @@ class Node {
 
     if (this.selectedVariantInd > -1) {
       img.src = `./img/${Node.variants[this.selectedVariantInd].img}`;
+    } else {
+      img.src = `./img/empty.png`;
     }
 
     return img;

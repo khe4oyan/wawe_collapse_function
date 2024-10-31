@@ -1,13 +1,15 @@
 import Node from "./Node.js";
 
 class World {
+  worlds;
   world;
 
   constructor() {
+    this.worlds = [];
     this.world = [];
 
     const heigth = 30;
-    const width = 65;
+    const width = 40;
 
     // create world
     for (let i = 0; i < heigth; ++i) {
@@ -20,9 +22,13 @@ class World {
   }
 
   initWorld() {
+    // VERSION 1
     const randomI = Math.floor(Math.random() * this.world.length); 
     const randomJ = Math.floor(Math.random() * this.world[0].length)
     this.recursiveWorldInit(randomI, randomJ);
+
+    // VERSION 2
+    // this.recursiveWorldInit(0, 0);
   }
 
   recursiveWorldInit(i, j) {
@@ -31,6 +37,7 @@ class World {
     }
 
     this.world[i][j].init(this.world, i, j);
+    this.worlds.push(JSON.parse(JSON.stringify(this.world)));
 
     try {this.recursiveWorldInit(i + 1, j);} catch (error) {}
     try {this.recursiveWorldInit(i - 1, j);} catch (error) {}
@@ -39,6 +46,7 @@ class World {
   }
 
   render() {
+    document.querySelector(".buttons")?.remove();
     const world = document.querySelector(".world");
     world.innerHTML = '';
 
