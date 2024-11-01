@@ -8,18 +8,50 @@ class NodeChance {
   }
 }
 
+class NodeItem {
+  img;
+  variants;
+
+  constructor(img) {
+    this.img = img;
+    this.variants = [];
+  }
+
+  addChance(nodeInd, dropChance) {
+    this.variants.push(new NodeChance(nodeInd, dropChance));
+    return this;
+  }
+}
+
 class Node {
   static variants = [
-    // {img: "forest.png", variants: [new NodeChance(0, 90), new NodeChance(1, 10)]},
-    // {img: "tree.png", variants: [new NodeChance(1, 90), new NodeChance(0, 5), new NodeChance(2, 5)]},
-    // {img: "grass.png", variants: [new NodeChance(2, 90), new NodeChance(1, 5)]},
+    new NodeItem('forest.png')
+    .addChance(0, 50)
+    .addChance(1, 100),
+    
+    new NodeItem('tree.png')
+    .addChance(0, 50)
+    .addChance(1, 10)
+    .addChance(2, 50),
 
-    {img: "forest.png", variants: [new NodeChance(0, 50), new NodeChance(1, 100)]},
-    {img: "tree.png", variants: [new NodeChance(0, 50), new NodeChance(1, 10), new NodeChance(2, 50)]},
-    {img: "grass.png", variants: [new NodeChance(1, 50), new NodeChance(2, 10), new NodeChance(3, 50)]},
-    {img: "sand.png", variants: [new NodeChance(2, 50), new NodeChance(3, 10), new NodeChance(4, 50)]},
-    {img: "water.png", variants: [new NodeChance(3, 50), new NodeChance(4, 10), new NodeChance(5, 50)]},
-    {img: "deep_water.png", variants: [new NodeChance(4, 40), new NodeChance(5, 60)]},
+    new NodeItem('grass.png')
+    .addChance(1, 50)
+    .addChance(2, 10)
+    .addChance(3, 50),
+
+    new NodeItem('sand.png')
+    .addChance(2, 50)
+    .addChance(3, 10)
+    .addChance(4, 50),
+
+    new NodeItem('water.png')
+    .addChance(3, 50)
+    .addChance(4, 10)
+    .addChance(5, 50),
+
+    new NodeItem('deep_water.png')
+    .addChance(4, 40)
+    .addChance(5, 60),
   ];
 
   isInited;
