@@ -1,15 +1,13 @@
 import Node from "./Node.js";
 
 class World {
-  worlds;
   world;
 
-  constructor() {
-    this.worlds = [];
+  constructor(width, heigth) {
     this.world = [];
 
-    const heigth = 30;
-    const width = 40;
+    const worldDom = document.querySelector(".world");
+    worldDom.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
 
     // create world
     for (let i = 0; i < heigth; ++i) {
@@ -22,33 +20,27 @@ class World {
   }
 
   initWorld() {
-    // VERSION 1
     const randomI = Math.floor(Math.random() * this.world.length); 
     const randomJ = Math.floor(Math.random() * this.world[0].length)
     this.recursiveWorldInit(randomI, randomJ);
-
-    // VERSION 2
-    // this.recursiveWorldInit(0, 0);
   }
 
   recursiveWorldInit(i, j) {
-    if (this.world[i][j].isTouched) {
-      return;
-    }
+    if (i < 0 || i >= this.world.length || j < 0 || j >= this.world[0].length) {return;}
+    if (this.world[i][j].isInited) {return;}
 
     this.world[i][j].init(this.world, i, j);
-    this.worlds.push(JSON.parse(JSON.stringify(this.world)));
 
-    try {this.recursiveWorldInit(i + 1, j);} catch (error) {}
-    try {this.recursiveWorldInit(i - 1, j);} catch (error) {}
-    try {this.recursiveWorldInit(i, j + 1);} catch (error) {}
-    try {this.recursiveWorldInit(i, j - 1);} catch (error) {}
+    this.recursiveWorldInit(i + 1, j);
+    this.recursiveWorldInit(i - 1, j);
+    this.recursiveWorldInit(i, j + 1);
+    this.recursiveWorldInit(i, j - 1);
   }
 
   render() {
     document.querySelector(".buttons")?.remove();
-    const world = document.querySelector(".world");
-    world.innerHTML = '';
+    const worldDom = document.querySelector(".world");
+    worldDom.innerHTML = '';
 
     for (let i = 0; i < this.world.length; ++i) {
       for (let j = 0; j < this.world[i].length; ++j) {
@@ -61,7 +53,7 @@ class World {
         nodeElem.appendChild(nodeData.getImg());
 
         // render in DOM
-        world.appendChild(nodeElem);
+        worldDom.appendChild(nodeElem);
       }
     }
   }

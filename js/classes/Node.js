@@ -1,77 +1,114 @@
+class NodeChance {
+  nodeInd;
+  dropChance;
+
+  constructor(nodeInd, dropChance) { 
+    this.nodeInd = nodeInd;
+    this.dropChance = dropChance;
+  }
+}
+
 class Node {
   static variants = [
-    {img: "forest.png", variants: [0, 1]},
-    {img: "tree.png", variants: [0, 1, 2]},
-    {img: "grass.png", variants: [1, 2, 3]},
-    {img: "sand.png", variants: [2, 3, 4]},
-    {img: "water.png", variants: [3, 4, 5]},
-    {img: "deep_water.png", variants: [4, 5]},
+    {img: "forest.png", variants: [new NodeChance(0, 50), new NodeChance(1, 100)]},
+    {img: "tree.png", variants: [new NodeChance(0, 50), new NodeChance(1, 10), new NodeChance(2, 50)]},
+    {img: "grass.png", variants: [new NodeChance(1, 50), new NodeChance(2, 10), new NodeChance(3, 50)]},
+    {img: "sand.png", variants: [new NodeChance(2, 50), new NodeChance(3, 10), new NodeChance(4, 50)]},
+    {img: "water.png", variants: [new NodeChance(3, 50), new NodeChance(4, 10), new NodeChance(5, 50)]},
+    {img: "deep_water.png", variants: [new NodeChance(4, 40), new NodeChance(5, 60)]},
   ];
 
+  isInited;
   selectedVariantInd;
-  isTouched;
+  possibleVariants;
 
   constructor() {
-    this.selectedVariantInd = -1;
-    this.isTouched = false;
+    this.isInited = false;
+    this.selectedVariantInd = null;
+    this.possibleVariants = [];
+    this.possibleVariants = this.#initPossibleVariants();
+  }
+
+  #initPossibleVariants() {
+    const possibleVariants = [];
+
+    for (let i = 0; i < Node.variants.length; ++i) {
+      possibleVariants.push(new NodeChance(i, 1));
+    }
+
+    return possibleVariants;
   }
 
   init(world, i, j) {
-    this.isTouched = true;
+    // checked for World.js
+    this.isInited = true;
 
-    let possibleVariants = new Set(Node.variants.map((_, index) => index));
+    // choose one state
+    this.selectedVariantInd = Math.floor(Math.random() * this.possibleVariants.length);
 
-    try {
-      this.intersectSideVariants(world, i, j - 1, possibleVariants);
-    } catch (error) {}
-    try {
-      this.intersectSideVariants(world, i, j + 1, possibleVariants);
-    } catch (error) {}
-    try {
-      this.intersectSideVariants(world, i - 1, j, possibleVariants);
-    } catch (error) {}
-    try {
-      this.intersectSideVariants(world, i + 1, j, possibleVariants);
-    } catch (error) {}
+    // set possible variants for neighbours
+    const possibleVariant = this.possibleVariants[this.selectedVariantInd];
 
-    const availableVariants = Array.from(possibleVariants);
-
-    if (availableVariants.length === 0) {
-      this.selectedVariantInd = Math.floor(
-        Math.random() * Node.variants.length
-      );
-      return;
-    }
-
-    this.selectedVariantInd = availableVariants[Math.floor(Math.random() * availableVariants.length)];
+    this.setNeighbourVariants(world, i, j - 1, possibleVariant);
+    this.setNeighbourVariants(world, i, j + 1, possibleVariant);
+    this.setNeighbourVariants(world, i - 1, j, possibleVariant);
+    this.setNeighbourVariants(world, i + 1, j, possibleVariant);
   }
 
-  intersectSideVariants(world, i, j, possibleVariants) {
-    if (i < 0 || i >= world.length || j < 0 || j >= world[0].length) {
-      return;
+  setNeighbourVariants(world, i, j, possibleVariant) {
+    // check the world border
+    if (i < 0 || i >= world.length || j < 0 || j >= world[i].length) {return;}
+    if (world[i][j].isInited) { return; }
+
+    let nodeInd = possibleVariant?.nodeInd ?? 0;
+
+    const availableVariants = Node.variants[nodeInd].variants;
+    const neighbourVariants = world[i][j].possibleVariants;
+    let newPossibleVariants = [];
+
+    for (let i = 0; i < neighbourVariants.length; ++i) {
+      for (let j = 0; j < availableVariants.length; ++j){ 
+        if (neighbourVariants[i].nodeInd === availableVariants[j].nodeInd) {
+          newPossibleVariants.push(neighbourVariants[i]);
+          break;
+        }
+      }
     }
 
-    const variantInd = world[i][j].selectedVariantInd;
-    if (variantInd > -1) {
-      const allowedVariants = new Set(Node.variants[variantInd].variants);
-      possibleVariants.forEach((variant) => {
-        if (!allowedVariants.has(variant)) {
-          possibleVariants.delete(variant);
-        }
-      });
+    // check if dont have possible variants then init it
+    if (newPossibleVariants.length === 0) {
+      newPossibleVariants = this.#initPossibleVariants();
     }
+
+    world[i][j].possibleVariants = newPossibleVariants;
   }
 
   getImg() {
-    const img = document.createElement("img");
-
-    if (this.selectedVariantInd > -1) {
-      img.src = `./img/${Node.variants[this.selectedVariantInd].img}`;
+    if (this.selectedVariantInd === null) {
+      return this.#createVariantsImg();
     } else {
-      img.src = `./img/empty.png`;
+      const img = document.createElement("img");
+      const nodeChance = this.possibleVariants[this.selectedVariantInd];
+      const node = Node.variants[nodeChance.nodeInd];
+      img.src = `./img/${node.img}`;
+      return img;
+    }
+  }
+
+  #createVariantsImg() {
+    const div = document.createElement('div');
+    div.classList.add("variantsBox");
+    
+    for (let i = 0; i < this.possibleVariants.length; ++i) {
+      const nodeChance = this.possibleVariants[i];
+      const node = Node.variants[nodeChance.nodeInd];
+      
+      const img = document.createElement("img");
+      img.src = `./img/${node.img}`;
+      div.appendChild(img);
     }
 
-    return img;
+    return div;
   }
 }
 
