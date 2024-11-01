@@ -25,6 +25,11 @@ class World {
     this.recursiveWorldInit(randomI, randomJ);
   }
 
+  initNode(i, j, nodeInd) {
+    if (i < 0 || i >= this.world.length || j < 0 || j >= this.world[0].length) {return;}
+    this.world[i][j].init(this.world, i, j, nodeInd);
+  }
+
   recursiveWorldInit(i, j) {
     if (i < 0 || i >= this.world.length || j < 0 || j >= this.world[0].length) {return;}
     if (this.world[i][j].isInited) {return;}

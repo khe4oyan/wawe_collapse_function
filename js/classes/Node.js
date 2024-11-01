@@ -39,12 +39,12 @@ class Node {
     return possibleVariants;
   }
 
-  init(world, i, j) {
+  init(world, i, j, ind) {
     // checked for World.js
     this.isInited = true;
 
     // choose one state
-    this.selectedVariantInd = Math.floor(Math.random() * this.possibleVariants.length);
+    this.selectedVariantInd = ind ?? Math.floor(Math.random() * this.possibleVariants.length);
 
     // set possible variants for neighbours
     const possibleVariant = this.possibleVariants[this.selectedVariantInd];
