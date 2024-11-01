@@ -10,6 +10,10 @@ class NodeChance {
 
 class Node {
   static variants = [
+    // {img: "forest.png", variants: [new NodeChance(0, 90), new NodeChance(1, 10)]},
+    // {img: "tree.png", variants: [new NodeChance(1, 90), new NodeChance(0, 5), new NodeChance(2, 5)]},
+    // {img: "grass.png", variants: [new NodeChance(2, 90), new NodeChance(1, 5)]},
+
     {img: "forest.png", variants: [new NodeChance(0, 50), new NodeChance(1, 100)]},
     {img: "tree.png", variants: [new NodeChance(0, 50), new NodeChance(1, 10), new NodeChance(2, 50)]},
     {img: "grass.png", variants: [new NodeChance(1, 50), new NodeChance(2, 10), new NodeChance(3, 50)]},
@@ -39,12 +43,17 @@ class Node {
     return possibleVariants;
   }
 
-  init(world, i, j, ind) {
+  #genereteSelectedIndByPossibleVariants() {
+    // TODO implement random choose with chance
+    return Math.floor(Math.random() * this.possibleVariants.length);
+  }
+
+  init(world, i, j, ind = null) {
     // checked for World.js
     this.isInited = true;
 
     // choose one state
-    this.selectedVariantInd = ind ?? Math.floor(Math.random() * this.possibleVariants.length);
+    this.selectedVariantInd = ind ?? this.#genereteSelectedIndByPossibleVariants();
 
     // set possible variants for neighbours
     const possibleVariant = this.possibleVariants[this.selectedVariantInd];
@@ -69,7 +78,9 @@ class Node {
     for (let i = 0; i < neighbourVariants.length; ++i) {
       for (let j = 0; j < availableVariants.length; ++j){ 
         if (neighbourVariants[i].nodeInd === availableVariants[j].nodeInd) {
-          newPossibleVariants.push(neighbourVariants[i]);
+          const chanceSumm = neighbourVariants[i].dropChance + availableVariants[j].dropChance;
+          const nodeChance = new NodeChance(neighbourVariants[i].nodeInd, chanceSumm);
+          newPossibleVariants.push(nodeChance);
           break;
         }
       }

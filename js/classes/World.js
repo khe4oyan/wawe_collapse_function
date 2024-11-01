@@ -20,9 +20,7 @@ class World {
   }
 
   initWorld() {
-    const randomI = Math.floor(Math.random() * this.world.length); 
-    const randomJ = Math.floor(Math.random() * this.world[0].length)
-    this.recursiveWorldInit(randomI, randomJ);
+    this.recursiveWorldInit(0, 0);
   }
 
   initNode(i, j, nodeInd) {
