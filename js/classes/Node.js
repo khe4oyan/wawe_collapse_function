@@ -140,22 +140,6 @@ class Node {
     img.src = `./img/${node.img}`;
     return img;
   }
-
-  #createVariantsImg() {
-    const div = document.createElement('div');
-    div.classList.add("variantsBox");
-    
-    for (let i = 0; i < this.possibleVariants.length; ++i) {
-      const nodeChance = this.possibleVariants[i];
-      const node = Node.variants[nodeChance.nodeInd];
-      
-      const img = document.createElement("img");
-      img.src = `./img/${node.img}`;
-      div.appendChild(img);
-    }
-
-    return div;
-  }
 }
 
 export default Node;
