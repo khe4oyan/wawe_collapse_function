@@ -26,32 +26,38 @@ class NodeItem {
 class Node {
   static variants = [
     new NodeItem('forest.png')
-    .addChance(0, 50)
-    .addChance(1, 100),
+    .addChance(1, 1)
+    .addChance(0, 3)
+    ,
     
     new NodeItem('tree.png')
-    .addChance(0, 50)
-    .addChance(1, 10)
-    .addChance(2, 50),
+    .addChance(1, 1)
+    .addChance(0, 1)
+    .addChance(2, 5)
+    ,
 
     new NodeItem('grass.png')
-    .addChance(1, 50)
+    .addChance(1, 1)
+    .addChance(3, 4)
     .addChance(2, 10)
-    .addChance(3, 50),
+    ,
 
     new NodeItem('sand.png')
-    .addChance(2, 50)
-    .addChance(3, 10)
-    .addChance(4, 50),
+    .addChance(2, 1)
+    .addChance(4, 2)
+    .addChance(3, 3)
+    ,
 
     new NodeItem('water.png')
-    .addChance(3, 50)
-    .addChance(4, 10)
-    .addChance(5, 50),
+    .addChance(4, 1)
+    .addChance(3, 1)
+    .addChance(5, 3)
+    ,
 
     new NodeItem('deep_water.png')
-    .addChance(4, 40)
-    .addChance(5, 60),
+    .addChance(4, 1)
+    .addChance(5, 10)
+    ,
   ];
 
   isInited;
@@ -76,8 +82,31 @@ class Node {
   }
 
   #genereteSelectedIndByPossibleVariants() {
-    // TODO implement random choose with chance
-    return Math.floor(Math.random() * this.possibleVariants.length);
+    let totalChance = 0;
+
+    // calculate total chance
+    const variants = this.possibleVariants;
+    for (let i = 0; i < variants.length; ++i) {
+      const variant = variants[i];
+      const {dropChance: variantDropChance} = variant;
+      totalChance += variantDropChance;
+    }
+    
+    // random chance
+    const randomChance = Math.floor(Math.random() * totalChance);
+    let accumulatedChance = 0;
+
+    // calculate and return item index
+    for (let i = 0; i < variants.length; ++i) {
+      const variant = variants[i];
+      const {dropChance: variantDropChance} = variant;
+
+      accumulatedChance += variantDropChance;
+
+      if (randomChance <= accumulatedChance) {
+        return i;
+      }
+    }
   }
 
   init(world, i, j, ind = null) {
@@ -127,15 +156,11 @@ class Node {
   }
 
   getImg() {
-    if (this.selectedVariantInd === null) {
-      return this.#createVariantsImg();
-    } else {
-      const img = document.createElement("img");
-      const nodeChance = this.possibleVariants[this.selectedVariantInd];
-      const node = Node.variants[nodeChance.nodeInd];
-      img.src = `./img/${node.img}`;
-      return img;
-    }
+    const img = document.createElement("img");
+    const nodeChance = this.possibleVariants[this.selectedVariantInd];
+    const node = Node.variants[nodeChance.nodeInd];
+    img.src = `./img/${node.img}`;
+    return img;
   }
 
   #createVariantsImg() {

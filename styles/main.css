@@ -16,6 +16,16 @@ body {
   display: grid;
 }
 
+.regenButton {
+  padding: 10px;
+  border: none;
+  margin-top: 5px;
+  cursor: pointer;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}
+
 .node {
   --size: 20px;
   width: var(--size);

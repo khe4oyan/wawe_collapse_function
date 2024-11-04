@@ -1,5 +1,13 @@
 import World from "./classes/World.js";
 
-const world = new World(40, 30);
-world.initWorld();
-world.render();
+function regen() {
+  const world = new World(40, 40);
+  world.initWorld();
+  world.render();
+}
+
+regen();
+
+document.querySelector('.regenButton').addEventListener("click", () => {
+  regen();
+});
