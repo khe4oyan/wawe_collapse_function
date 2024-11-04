@@ -1,27 +1,5 @@
-class NodeChance {
-  nodeInd;
-  dropChance;
-
-  constructor(nodeInd, dropChance) { 
-    this.nodeInd = nodeInd;
-    this.dropChance = dropChance;
-  }
-}
-
-class NodeItem {
-  img;
-  variants;
-
-  constructor(img) {
-    this.img = img;
-    this.variants = [];
-  }
-
-  addChance(nodeInd, dropChance) {
-    this.variants.push(new NodeChance(nodeInd, dropChance));
-    return this;
-  }
-}
+import NodeChance from './NodeChance.js';
+import NodeItem from './NodeItem.js';
 
 class Node {
   static variants = [
