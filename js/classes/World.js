@@ -20,7 +20,7 @@ class World {
   }
 
   initWorld() {
-    this.recursiveWorldInit(10, 30);
+    this.recursiveWorldInit(0, 0);
   }
 
   initNode(i, j, nodeInd) {
