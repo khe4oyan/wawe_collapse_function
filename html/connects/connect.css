@@ -36,21 +36,45 @@ img {
     .sides {
       display: flex;
       flex-direction: column;
+      overflow: auto;
+      padding-bottom: 10px;
       gap: 5px;
 
       .side {
+        /* overflow: auto; */
+
         .sideTitle {
           font-family: Arial, Helvetica, sans-serif;
         }
         .sideAvailableItems {
           display: flex;
           gap: 5px;
-          overflow: auto;
+          
           .availableItemImg {
             width: 50px;
+          }
+
+          .availableItemImg.disabled {
+            opacity: .2;
           }
         }
       }
     }
   }
+}
+
+/* width */
+::-webkit-scrollbar {
+  height: 2px;
+  width: 2px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: gray;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: white;
 }

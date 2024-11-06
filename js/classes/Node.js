@@ -20,9 +20,6 @@ class Node {
     new NodeItem('grass.png')
     .addChanceAll(1, 1)
     .addChanceAll(3, 2)
-    .addChanceAll(7, 2)
-    .addChanceAll(8, 2)
-    .addChanceRight(9, 2)
     .addChanceAll(2, 10)
     ,
 
@@ -47,51 +44,49 @@ class Node {
     ,
 
     // 6
-    new NodeItem('roadAll.png')
-    .addChanceTop(8)
-    .addChanceBottom(8)
-    .addChanceLeft(7)
-    .addChanceRight(7)
-    ,
+    // new NodeItem('roadAll.png')
+    // .addChanceTop(8)
+    // .addChanceBottom(8)
+    // .addChanceLeft(7)
+    // .addChanceRight(7)
+    // .addChanceAll(2)
+    // ,
 
-    // 7
-    new NodeItem('roadHorizontal.png')
-    .addChanceTop(2)
-    .addChanceBottom(2)
-    .addChanceLeft(7)
-    .addChanceRight(7)
-    ,
+    // // 7
+    // new NodeItem('roadHorizontal.png')
+    // .addChanceAll(2)
+    // .addChanceLeft(7)
+    // .addChanceRight(7)
+    // ,
 
-    // 8
-    new NodeItem('roadVertical.png')
-    .addChanceTop(8)
-    .addChanceBottom(8)
-    .addChanceLeft(2)
-    .addChanceRight(2)
-    ,
+    // // 8
+    // new NodeItem('roadVertical.png')
+    // .addChanceTop(8)
+    // .addChanceBottom(8)
+    // .addChanceAll(2)
+    // ,
 
-    // 9
-    new NodeItem('roadTopRight.png')
-    .addChanceTop(8)
-    .addChanceRight(7)
-    .addChanceLeft(2)
-    .addChanceBottom(2)
-    ,
+    // // 9
+    // new NodeItem('roadTopRight.png')
+    // .addChanceTop(8, 10)
+    // .addChanceRight(7, 10)
+    // .addChanceAll(2, 1)
+    // ,
 
-    // 10
-    new NodeItem('roadBottomRight.png')
+    // // 10
+    // new NodeItem('roadBottomRight.png')
     
-    ,
+    // ,
 
-    // 11
-    new NodeItem('roadBottomLeft.png')
+    // // 11
+    // new NodeItem('roadBottomLeft.png')
     
-    ,
+    // ,
 
-    // 12
-    new NodeItem('roadTopLeft.png')
+    // // 12
+    // new NodeItem('roadTopLeft.png')
     
-    ,
+    // ,
   ];
 
   isInited;

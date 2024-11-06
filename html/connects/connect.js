@@ -7,11 +7,22 @@ for (let i = 0; i < Node.variants.length; ++i) {
   const itemBoxDOM = document.createElement("div");
   itemBoxDOM.classList.add('itemBox');
 
+  // img box
+  const imgBoxDOM = document.createElement('div');
+
   // create and append img
   const imgDOM = document.createElement('img');
   imgDOM.classList.add('itemImg');
   imgDOM.src = `../../img/${img}`;
-  itemBoxDOM.appendChild(imgDOM);
+  imgBoxDOM.appendChild(imgDOM);
+  
+
+  // item index
+  const indexDOM = document.createElement('p');
+  indexDOM.innerText = i;
+  imgBoxDOM.appendChild(indexDOM);
+
+  itemBoxDOM.appendChild(imgBoxDOM);
 
   const sides = [
     {title: 'Top', variants: top},
@@ -54,13 +65,29 @@ for (let i = 0; i < Node.variants.length; ++i) {
 
 
 function createVariantsDOM(parentDOM, variants) {
-  for (let i = 0; i < variants.length; ++i) {
-    const {nodeInd} = variants[i];
-    const {img} = Node.variants[nodeInd];
+  const allVairants = Node.variants;
+  const availableVariants = new Set();
 
+  const imgCreate = (img, className = null) => {
     const imgDOM = document.createElement('img');
     imgDOM.classList.add('availableItemImg');
+    className && imgDOM.classList.add(className);
     imgDOM.src = `../../img/${img}`;
     parentDOM.appendChild(imgDOM);
+  }
+
+  // show available nodes
+  for (let i = 0; i < variants.length; ++i) {
+    const {nodeInd} = variants[i];
+    availableVariants.add(nodeInd);
+    const {img} = allVairants[nodeInd];
+    imgCreate(img);
+  }
+
+  // show unavailable nodes
+  for (let i = 0; i < allVairants.length; ++i) {
+    if (!availableVariants.has(i)) {
+      imgCreate(allVairants[i].img, 'disabled');
+    }
   }
 }
