@@ -3,35 +3,95 @@ import NodeItem from './NodeItem.js';
 
 class Node {
   static variants = [
+    // 0
     new NodeItem('forest.png')
     .addChanceAll(1, 1)
-    .addChanceAll(0, 3),
+    .addChanceAll(0, 3)
+    ,
     
+    // 1
     new NodeItem('tree.png')
     .addChanceAll(1, 1)
     .addChanceAll(0, 1)
-    .addChanceAll(2, 5),
+    .addChanceAll(2, 5)
+    ,
 
+    // 2
     new NodeItem('grass.png')
     .addChanceAll(1, 1)
-    .addChanceAll(3, 4)
-    .addChanceAll(2, 10),
+    .addChanceAll(3, 2)
+    .addChanceAll(7, 2)
+    .addChanceAll(8, 2)
+    .addChanceRight(9, 2)
+    .addChanceAll(2, 10)
+    ,
 
+    // 3
     new NodeItem('sand.png')
     .addChanceAll(2, 1)
     .addChanceAll(4, 2)
-    .addChanceAll(3, 3),
+    .addChanceAll(3, 3)
+    ,
 
+    // 4
     new NodeItem('water.png')
     .addChanceAll(4, 1)
     .addChanceAll(3, 1)
-    .addChanceAll(5, 3),
+    .addChanceAll(5, 3)
+    ,
 
+    // 5
     new NodeItem('deep_water.png')
     .addChanceAll(4, 1)
     .addChanceAll(5, 10)
+    ,
 
+    // 6
+    new NodeItem('roadAll.png')
+    .addChanceTop(8)
+    .addChanceBottom(8)
+    .addChanceLeft(7)
+    .addChanceRight(7)
+    ,
+
+    // 7
+    new NodeItem('roadHorizontal.png')
+    .addChanceTop(2)
+    .addChanceBottom(2)
+    .addChanceLeft(7)
+    .addChanceRight(7)
+    ,
+
+    // 8
+    new NodeItem('roadVertical.png')
+    .addChanceTop(8)
+    .addChanceBottom(8)
+    .addChanceLeft(2)
+    .addChanceRight(2)
+    ,
+
+    // 9
+    new NodeItem('roadTopRight.png')
+    .addChanceTop(8)
+    .addChanceRight(7)
+    .addChanceLeft(2)
+    .addChanceBottom(2)
+    ,
+
+    // 10
+    new NodeItem('roadBottomRight.png')
     
+    ,
+
+    // 11
+    new NodeItem('roadBottomLeft.png')
+    
+    ,
+
+    // 12
+    new NodeItem('roadTopLeft.png')
+    
+    ,
   ];
 
   isInited;
