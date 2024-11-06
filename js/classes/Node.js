@@ -4,38 +4,34 @@ import NodeItem from './NodeItem.js';
 class Node {
   static variants = [
     new NodeItem('forest.png')
-    .addChance(1, 1)
-    .addChance(0, 3)
-    ,
+    .addChanceAll(1, 1)
+    .addChanceAll(0, 3),
     
     new NodeItem('tree.png')
-    .addChance(1, 1)
-    .addChance(0, 1)
-    .addChance(2, 5)
-    ,
+    .addChanceAll(1, 1)
+    .addChanceAll(0, 1)
+    .addChanceAll(2, 5),
 
     new NodeItem('grass.png')
-    .addChance(1, 1)
-    .addChance(3, 4)
-    .addChance(2, 10)
-    ,
+    .addChanceAll(1, 1)
+    .addChanceAll(3, 4)
+    .addChanceAll(2, 10),
 
     new NodeItem('sand.png')
-    .addChance(2, 1)
-    .addChance(4, 2)
-    .addChance(3, 3)
-    ,
+    .addChanceAll(2, 1)
+    .addChanceAll(4, 2)
+    .addChanceAll(3, 3),
 
     new NodeItem('water.png')
-    .addChance(4, 1)
-    .addChance(3, 1)
-    .addChance(5, 3)
-    ,
+    .addChanceAll(4, 1)
+    .addChanceAll(3, 1)
+    .addChanceAll(5, 3),
 
     new NodeItem('deep_water.png')
-    .addChance(4, 1)
-    .addChance(5, 10)
-    ,
+    .addChanceAll(4, 1)
+    .addChanceAll(5, 10)
+
+    
   ];
 
   isInited;
@@ -45,15 +41,26 @@ class Node {
   constructor() {
     this.isInited = false;
     this.selectedVariantInd = null;
-    this.possibleVariants = [];
     this.possibleVariants = this.#initPossibleVariants();
+  }
+
+  init(world, i, j, ind = null) {
+    // checked for World.js
+    this.isInited = true;
+
+    // choose one state
+    this.selectedVariantInd = ind ?? this.#genereteSelectedIndByPossibleVariants();
+
+    // set possible variants for neighbours
+    const possibleVariant = this.possibleVariants[this.selectedVariantInd];
+    this.setNeighboursVariants(world, i, j, possibleVariant);
   }
 
   #initPossibleVariants() {
     const possibleVariants = [];
 
     for (let i = 0; i < Node.variants.length; ++i) {
-      possibleVariants.push(new NodeChance(i, 1));
+      possibleVariants.push(new NodeChance(i, 50));
     }
 
     return possibleVariants;
@@ -87,30 +94,22 @@ class Node {
     }
   }
 
-  init(world, i, j, ind = null) {
-    // checked for World.js
-    this.isInited = true;
-
-    // choose one state
-    this.selectedVariantInd = ind ?? this.#genereteSelectedIndByPossibleVariants();
-
-    // set possible variants for neighbours
-    const possibleVariant = this.possibleVariants[this.selectedVariantInd];
-
-    this.setNeighbourVariants(world, i, j - 1, possibleVariant);
-    this.setNeighbourVariants(world, i, j + 1, possibleVariant);
-    this.setNeighbourVariants(world, i - 1, j, possibleVariant);
-    this.setNeighbourVariants(world, i + 1, j, possibleVariant);
+  setNeighboursVariants(world, i, j, possibleVariant) {
+    this.setNeighbourVariants(world, i, j - 1, possibleVariant, 'left');
+    this.setNeighbourVariants(world, i, j + 1, possibleVariant, 'right');
+    this.setNeighbourVariants(world, i - 1, j, possibleVariant, 'top');
+    this.setNeighbourVariants(world, i + 1, j, possibleVariant, 'bottom');
   }
 
-  setNeighbourVariants(world, i, j, possibleVariant) {
+  setNeighbourVariants(world, i, j, possibleVariant, side = 'top') {
     // check the world border
     if (i < 0 || i >= world.length || j < 0 || j >= world[i].length) {return;}
     if (world[i][j].isInited) { return; }
 
     let nodeInd = possibleVariant?.nodeInd ?? 0;
 
-    const availableVariants = Node.variants[nodeInd].variants;
+    const availableVariants = Node.variants[nodeInd][side];
+    
     const neighbourVariants = world[i][j].possibleVariants;
     let newPossibleVariants = [];
 
