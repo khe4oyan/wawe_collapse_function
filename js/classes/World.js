@@ -1,11 +1,12 @@
-import Node from "./Node.js";
+import Node from './Node.js';
 
 class World {
-  world;
-
   constructor(width, heigth) {
     this.world = [];
+    this.createWorld(width, heigth);
+  }
 
+  createWorld(width, heigth) {
     const worldDom = document.querySelector(".world");
     worldDom.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
 
@@ -20,24 +21,11 @@ class World {
   }
 
   initWorld() {
-    this.recursiveWorldInit(0, 0);
-  }
-
-  initNode(i, j, nodeInd) {
-    if (i < 0 || i >= this.world.length || j < 0 || j >= this.world[0].length) {return;}
-    this.world[i][j].init(this.world, i, j, nodeInd);
-  }
-
-  recursiveWorldInit(i, j) {
-    if (i < 0 || i >= this.world.length || j < 0 || j >= this.world[0].length) {return;}
-    if (this.world[i][j].isInited) {return;}
-
-    this.world[i][j].init(this.world, i, j);
-
-    this.recursiveWorldInit(i + 1, j);
-    this.recursiveWorldInit(i - 1, j);
-    this.recursiveWorldInit(i, j + 1);
-    this.recursiveWorldInit(i, j - 1);
+    for (let i = 0; i < this.world.length; ++i) {
+      for (let j = 0; j < this.world[i].length; ++j) {
+        this.world[i][j].init(this, i, j);
+      }
+    }
   }
 
   render() {

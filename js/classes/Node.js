@@ -1,197 +1,37 @@
-import NodeChance from './NodeChance.js';
-import NodeItem from './NodeItem.js';
-
 class Node {
-  static variants = [
-    // 0
-    new NodeItem('forest.png')
-    .addChanceAll(1, 1)
-    .addChanceAll(0, 3)
-    ,
-    
-    // 1
-    new NodeItem('tree.png')
-    .addChanceAll(1, 1)
-    .addChanceAll(0, 1)
-    .addChanceAll(2, 5)
-    ,
-
-    // 2
-    new NodeItem('grass.png')
-    .addChanceAll(1, 1)
-    .addChanceAll(3, 2)
-    .addChanceAll(2, 10)
-    ,
-
-    // 3
-    new NodeItem('sand.png')
-    .addChanceAll(2, 1)
-    .addChanceAll(4, 2)
-    .addChanceAll(3, 3)
-    ,
-
-    // 4
-    new NodeItem('water.png')
-    .addChanceAll(4, 1)
-    .addChanceAll(3, 1)
-    .addChanceAll(5, 3)
-    ,
-
-    // 5
-    new NodeItem('deep_water.png')
-    .addChanceAll(4, 1)
-    .addChanceAll(5, 10)
-    ,
-
-    // 6
-    // new NodeItem('roadAll.png')
-    // .addChanceTop(8)
-    // .addChanceBottom(8)
-    // .addChanceLeft(7)
-    // .addChanceRight(7)
-    // .addChanceAll(2)
-    // ,
-
-    // // 7
-    // new NodeItem('roadHorizontal.png')
-    // .addChanceAll(2)
-    // .addChanceLeft(7)
-    // .addChanceRight(7)
-    // ,
-
-    // // 8
-    // new NodeItem('roadVertical.png')
-    // .addChanceTop(8)
-    // .addChanceBottom(8)
-    // .addChanceAll(2)
-    // ,
-
-    // // 9
-    // new NodeItem('roadTopRight.png')
-    // .addChanceTop(8, 10)
-    // .addChanceRight(7, 10)
-    // .addChanceAll(2, 1)
-    // ,
-
-    // // 10
-    // new NodeItem('roadBottomRight.png')
-    
-    // ,
-
-    // // 11
-    // new NodeItem('roadBottomLeft.png')
-    
-    // ,
-
-    // // 12
-    // new NodeItem('roadTopLeft.png')
-    
-    // ,
+  static nodes = [
+    ["grass.png", []],
+    ["tree.png", []],
+    ["forest.png", []],
+    ["sand.png", []],
+    ["water.png", []],
+    ["deep_water.png", []],
   ];
 
-  isInited;
-  selectedVariantInd;
-  possibleVariants;
-
-  constructor() {
-    this.isInited = false;
-    this.selectedVariantInd = null;
-    this.possibleVariants = this.#initPossibleVariants();
+  constructor(img = null) {
+    this.isInited = null;
+    this.img = img;
   }
 
-  init(world, i, j, ind = null) {
-    // checked for World.js
-    this.isInited = true;
-
-    // choose one state
-    this.selectedVariantInd = ind ?? this.#genereteSelectedIndByPossibleVariants();
-
-    // set possible variants for neighbours
-    const possibleVariant = this.possibleVariants[this.selectedVariantInd];
-    this.setNeighboursVariants(world, i, j, possibleVariant);
-  }
-
-  #initPossibleVariants() {
-    const possibleVariants = [];
-
-    for (let i = 0; i < Node.variants.length; ++i) {
-      possibleVariants.push(new NodeChance(i, 50));
-    }
-
-    return possibleVariants;
-  }
-
-  #genereteSelectedIndByPossibleVariants() {
-    let totalChance = 0;
-
-    // calculate total chance
-    const variants = this.possibleVariants;
-    for (let i = 0; i < variants.length; ++i) {
-      const variant = variants[i];
-      const {dropChance: variantDropChance} = variant;
-      totalChance += variantDropChance;
-    }
-    
-    // random chance
-    const randomChance = Math.floor(Math.random() * totalChance);
-    let accumulatedChance = 0;
-
-    // calculate and return item index
-    for (let i = 0; i < variants.length; ++i) {
-      const variant = variants[i];
-      const {dropChance: variantDropChance} = variant;
-
-      accumulatedChance += variantDropChance;
-
-      if (randomChance <= accumulatedChance) {
-        return i;
-      }
-    }
-  }
-
-  setNeighboursVariants(world, i, j, possibleVariant) {
-    this.setNeighbourVariants(world, i, j - 1, possibleVariant, 'left');
-    this.setNeighbourVariants(world, i, j + 1, possibleVariant, 'right');
-    this.setNeighbourVariants(world, i - 1, j, possibleVariant, 'top');
-    this.setNeighbourVariants(world, i + 1, j, possibleVariant, 'bottom');
-  }
-
-  setNeighbourVariants(world, i, j, possibleVariant, side = 'top') {
-    // check the world border
-    if (i < 0 || i >= world.length || j < 0 || j >= world[i].length) {return;}
-    if (world[i][j].isInited) { return; }
-
-    let nodeInd = possibleVariant?.nodeInd ?? 0;
-
-    const availableVariants = Node.variants[nodeInd][side];
-    
-    const neighbourVariants = world[i][j].possibleVariants;
-    let newPossibleVariants = [];
-
-    for (let i = 0; i < neighbourVariants.length; ++i) {
-      for (let j = 0; j < availableVariants.length; ++j){ 
-        if (neighbourVariants[i].nodeInd === availableVariants[j].nodeInd) {
-          const chanceSumm = neighbourVariants[i].dropChance + availableVariants[j].dropChance;
-          const nodeChance = new NodeChance(neighbourVariants[i].nodeInd, chanceSumm);
-          newPossibleVariants.push(nodeChance);
-          break;
-        }
-      }
-    }
-
-    // check if dont have possible variants then init it
-    if (newPossibleVariants.length === 0) {
-      newPossibleVariants = this.#initPossibleVariants();
-    }
-
-    world[i][j].possibleVariants = newPossibleVariants;
+  init(worldRef, i, j) {
+    this.img = 'grass.png';
+    // get sides available moves
+    // get variants
+    // get merged variants
+    // check for double elements
+    // get random element from this elements
+    // set this element(img) to this img
   }
 
   getImg() {
     const img = document.createElement("img");
-    const nodeChance = this.possibleVariants[this.selectedVariantInd];
-    const node = Node.variants[nodeChance.nodeInd];
-    img.src = `./img/${node.img}`;
+    
+    if (this.img === null) {
+      img.src = './img/empty.png';
+    } else {
+      img.src = `./img/${this.img}`;
+    }
+
     return img;
   }
 }
