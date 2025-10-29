@@ -22,6 +22,7 @@ class Node {
     this.i = i;
     this.j = j;
     this.nodeInd = nodeInd;
+    this.inQueue = false;
   }
 
   init(worldRef, push) {
@@ -60,7 +61,6 @@ class Node {
     try {
       return wordldRef[i][j].getVariants();
     } catch (error) {
-      console.log(i, j, error.message);
       return Node.#createFullVariants();
     }
   }

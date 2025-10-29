@@ -26,6 +26,11 @@ class World {
     queue.push(item);
 
     const push = (elem) => {
+      if (elem?.inQueue === true) {
+        return;
+      }
+      
+      elem.inQueue = true;
       queue.push(elem);
     };
 

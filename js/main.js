@@ -1,8 +1,9 @@
 import World from "./classes/World.js";
 
 function regen() {
-  const world = new World(4, 4);
-  // const world = new World(1, 1);
+  const w = Math.floor(window.innerWidth / 20) - 1;
+  const h = Math.floor(window.innerHeight / 20) - 1;
+  const world = new World(w, h);
   world.initWorld();
   world.render();
 }
