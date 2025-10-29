@@ -41,7 +41,7 @@ class World {
 
         // node data
         const nodeData = this.world[i][j];
-        nodeElem.appendChild(nodeData.getImg());
+        nodeElem.appendChild(nodeData.getImgDOM());
 
         // render in DOM
         worldDom.appendChild(nodeElem);
