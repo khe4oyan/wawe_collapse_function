@@ -22,7 +22,10 @@ class World {
 
   initWorld() {
     const queue = [];
-    const item = this.world[1][1];
+
+    const randI = Math.floor(Math.random() * this.world.length);
+    const randJ = Math.floor(Math.random() * this.world.length);
+    const item = this.world[randI][randJ];
     queue.push(item);
 
     const push = (elem) => {
