@@ -1,91 +1,14 @@
 class Node {
   static nodes = [
-    ["grass.png", [0, 1]],
-    ["tree.png", [1, 0, 2]],
-    ["forest.png", [2, 1]],
-    // ["sand.png", [3, 2, 4]],
-    // ["water.png", [4, 3, 5]],
-    // ["deep_water.png", [5, 4]],
+    ["deep_water.png", [0, 1]],
+    ["water.png", [1, 0, 2]],
+    ["sand.png", [2, 1, 3]],
+    ["grass.png", [3, 2, 4]],
+    ["tree.png", [4, 3, 5]],
+    ["forest.png", [5, 4]],
   ];
 
-  constructor(nodeInd = -1) {
-    this.isInited = null;
-    this.nodeInd = nodeInd;
-  }
-
-  init(worldRef, i, j) {
-    // get sides available variants
-    const top = this.#getNextToVariants(worldRef, i - 1, j);
-    const bottom = this.#getNextToVariants(worldRef, i + 1, j);
-    const left = this.#getNextToVariants(worldRef, i, j - 1);
-    const right = this.#getNextToVariants(worldRef, i, j + 1);
-
-    // get merged variantsgit 
-    const topBottom = this.#variantsMerge(top, bottom);
-    const leftRight = this.#variantsMerge(left, right);
-    const mergedVariants = this.#variantsMerge(this.#filterDoubleElements(topBottom), this.#filterDoubleElements(leftRight));
-
-    // check for double elements
-    const filteredElements = this.#filterDoubleElements(mergedVariants);
-    
-    // get random element from this elements
-    const randomElementInd = Math.floor(Math.random() * filteredElements.length);
-
-    // set this element(img) to this img
-    this.nodeInd = randomElementInd;
-  }
-
-  #filterDoubleElements(elements) {
-    const result = [];
-
-    for (let i = 0; i < elements.length; ++i) {
-      if (elements[i][1] > 1) {
-        result.push(elements[i][0]);
-      }
-    }
-
-    return result;
-  }
-
-  #variantsMerge(...sides) {
-    const variants = [];
-
-    const findVariantInd = (variantInd) => {
-      for (let i = 0; i < variants.length; ++i) {
-        if (variants[i][0] === variantInd) {
-          return i;
-        }
-      }
-
-      return -1;
-    };
-
-    for (let i = 0; i < sides.length; ++i) {
-      for (let j = 0; j < sides[i].length; ++j) {
-        const variantValue = sides[i][j];
-        const variantInd = findVariantInd(variantValue);
-
-        if (variantInd > -1) {
-          variants[variantInd][1] = variants[variantInd][1] + 1;
-        } else {
-          variants.push([variantValue, 1]);
-        }
-      }
-    }
-
-    return variants;
-  }
-
-  #getNextToVariants(wordldRef, i, j) {
-    try {
-      return wordldRef[i][j].getVariants();
-    } catch (error) {
-      console.log(i, j, error.message);
-      return this.#createFullVariants();
-    }
-  }
-
-  #createFullVariants() {
+  static #createFullVariants() {
     const variants = [];
 
     for (let i = 0; i < Node.nodes.length; ++i) {
@@ -95,11 +18,62 @@ class Node {
     return variants;
   }
 
+  constructor(i, j, nodeInd = -1) {
+    this.i = i;
+    this.j = j;
+    this.nodeInd = nodeInd;
+  }
+
+  init(worldRef, push) {
+    const i = this.i;
+    const j = this.j;
+    const world = worldRef.world;
+
+    // get sides available variants
+    const top = this.#getNextToVariants(world, i - 1, j);
+    const bottom = this.#getNextToVariants(world, i + 1, j);
+    const left = this.#getNextToVariants(world, i, j - 1);
+    const right = this.#getNextToVariants(world, i, j + 1);
+
+    const intersection = top
+      .filter(value => bottom.includes(value))
+      .filter(value => left.includes(value))
+      .filter(value => right.includes(value));
+
+    const randomElementInd = Math.floor(Math.random() * intersection.length);
+    this.nodeInd = intersection[randomElementInd];
+
+    const topNeighbor = world[i - 1]?.[j];
+    if (topNeighbor && !topNeighbor.isInited()) push(topNeighbor);
+
+    const bottomNeighbor = world[i + 1]?.[j];
+    if (bottomNeighbor && !bottomNeighbor.isInited()) push(bottomNeighbor);
+
+    const leftNeighbor = world[i]?.[j - 1];
+    if (leftNeighbor && !leftNeighbor.isInited()) push(leftNeighbor);
+
+    const rightNeighbor = world[i]?.[j + 1];
+    if (rightNeighbor && !rightNeighbor.isInited()) push(rightNeighbor);
+  }
+
+  #getNextToVariants(wordldRef, i, j) {
+    try {
+      return wordldRef[i][j].getVariants();
+    } catch (error) {
+      console.log(i, j, error.message);
+      return Node.#createFullVariants();
+    }
+  }
+
+  isInited() {
+    return this.nodeInd > -1;
+  }
+
   getVariants() {
     try {
       return Node.nodes[this.nodeInd][1];
     } catch (error) {
-      return [];
+      return Node.#createFullVariants();
     }
   }
 

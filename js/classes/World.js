@@ -14,17 +14,24 @@ class World {
     for (let i = 0; i < heigth; ++i) {
       const line = [];
       for (let j = 0; j < width; ++j) {
-        line.push(new Node());
+        line.push(new Node(i, j));
       }
       this.world.push(line);
     }
   }
 
   initWorld() {
-    for (let i = 0; i < this.world.length; ++i) {
-      for (let j = 0; j < this.world[i].length; ++j) {
-        this.world[i][j].init(this, i, j);
-      }
+    const queue = [];
+    const item = this.world[1][1];
+    queue.push(item);
+
+    const push = (elem) => {
+      queue.push(elem);
+    };
+
+    while(queue.length > 0) {
+      const elem = queue.shift();
+      elem.init(this, push);
     }
   }
 
