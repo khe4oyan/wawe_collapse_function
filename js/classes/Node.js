@@ -1,11 +1,11 @@
 class Node {
   static nodes = [
-    ["grass.png", []],
-    ["tree.png", []],
-    ["forest.png", []],
-    ["sand.png", []],
-    ["water.png", []],
-    ["deep_water.png", []],
+    ["grass.png", [0, 1]],
+    ["tree.png", [1, 0, 2]],
+    ["forest.png", [2, 1, 3]],
+    ["sand.png", [3, 2, 4]],
+    ["water.png", [4, 3, 5]],
+    ["deep_water.png", [5, 4]],
   ];
 
   constructor(img = null) {
